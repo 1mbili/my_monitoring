@@ -1,70 +1,70 @@
 ---
-    name: CI
-    "on":
-      pull_request:
-      push:
-        branches:
-          - main
-      schedule:
-        - cron: "30 5 * * 3"
-    
-    defaults:
-      run:
-        working-directory: "mbili.monitoring"
-    
-    jobs:
-      lint:
-        name: Lint
-        runs-on: ubuntu-latest
-        steps:
-          - name: Check out the codebase.
-            uses: actions/checkout@v2
-            with:
-              path: "mbili.monitoring"
-    
-          - name: Set up Python 3.
-            uses: actions/setup-python@v2
-            with:
-              python-version: "3.x"
-    
-          - name: Install test dependencies.
-            run: pip3 install yamllint ansible-lint
-    
-          - name: Run yamllint.
-            run: |
-              yamllint .
-    
-          - name: Run ansible-lint.
-            run: |
-              ansible-lint .
-    
-      molecule:
-        name: Molecule
-        runs-on: ubuntu-latest
-        strategy:
-          matrix:
-            distro:
-              - ubuntu2204
-    
-        steps:
-          - name: Check out the codebase.
-            uses: actions/checkout@v2
-            with:
-              path: "mbili.monitoring"
-    
-          - name: Set up Python 3.
-            uses: actions/setup-python@v2
-            with:
-              python-version: "3.x"
-    
-          - name: Install test dependencies.
-            run: pip3 install ansible molecule molecule-plugins[docker] docker
-    
-          - name: Install azure collection dependencies
-            run: pip3 install -r https://raw.githubusercontent.com/ansible-collections/azure/dev/requirements-azure.txt
-    
-          - name: Run Molecule tests.
-            run: molecule converge
-            env:
-              PY_COLORS: "1"
-              ANSIBLE_FORCE_COLOR: "1"
+name: CI
+"on":
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "30 5 * * 3"
+
+defaults:
+  run:
+    working-directory: "mbili.monitoring"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: "mbili.monitoring"
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install test dependencies.
+        run: pip3 install yamllint ansible-lint
+
+      - name: Run yamllint.
+        run: |
+          yamllint .
+
+      - name: Run ansible-lint.
+        run: |
+          ansible-lint .
+
+  molecule:
+    name: Molecule
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distro:
+          - ubuntu2204
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+        with:
+          path: "mbili.monitoring"
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.x"
+
+      - name: Install test dependencies.
+        run: pip3 install ansible molecule molecule-plugins[docker] docker
+
+      - name: Install azure collection dependencies
+        run: pip3 install -r https://raw.githubusercontent.com/ansible-collections/azure/dev/requirements-azure.txt
+
+      - name: Run Molecule tests.
+        run: molecule converge
+        env:
+          PY_COLORS: "1"
+          ANSIBLE_FORCE_COLOR: "1"
