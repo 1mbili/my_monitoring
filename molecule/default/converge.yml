@@ -1,0 +1,26 @@
+---
+- name: Fail if molecule group is missing
+  hosts: default
+  tasks:
+    - name: Install python3 with apt
+      ansible.builtin.apt:
+        name: python3
+        state: present
+      become: true
+
+    - name: Include my_monitoring role
+      ansible.builtin.include_role:
+        name: mbili.my_monitoring
+
+  post_tasks:
+    - name: Wait for the grafana server to start
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: 3000
+        state: drained
+        delay: 10
+
+    - name: Test grafana is running
+      ansible.builtin.uri:
+        url: http://127.0.0.1:3000/
+        status_code: 200

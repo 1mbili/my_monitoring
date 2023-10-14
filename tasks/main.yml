@@ -1,0 +1,27 @@
+---
+- name: Install grafana dependencies
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: true
+    cache_valid_time: 3600
+  with_items:
+    - adduser
+    - libfontconfig1
+    - musl
+
+- name: Get grafana
+  ansible.builtin.get_url:
+    url: https://dl.grafana.com/enterprise/release/grafana-enterprise_{{ version }}_amd64.deb
+    dest: /tmp/grafana.deb
+    mode: "0755"
+
+- name: Depackage grafana
+  ansible.builtin.apt:
+    deb: /tmp/grafana.deb
+
+- name: "Start grafana server"
+  ansible.builtin.service:
+    name: grafana-server
+    enabled: true
+    state: started

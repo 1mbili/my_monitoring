@@ -1,0 +1,19 @@
+---
+galaxy_info:
+  role_name: my_monitoring
+  namespace: mbili
+  author: mbili
+  description: Simple web app
+  license: MIT
+  min_ansible_version: "2.10"
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - trusty
+        - xenial
+        - focal
+
+  galaxy_tags: []

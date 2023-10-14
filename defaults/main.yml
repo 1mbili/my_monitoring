@@ -1,0 +1,5 @@
+---
+# defaults file for my_moitoring
+grafana_cloud_api_key: '<Your Cloud Access Policy token>'
+stack_name: '<stack-name>'
+org_name: '<org-name>'
