@@ -17,5 +17,8 @@ platforms:
       - default
 provisioner:
   name: ansible
+  inventory:
+    links:
+      hosts: test_inventory.ini
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}

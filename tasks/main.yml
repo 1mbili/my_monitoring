@@ -20,8 +20,50 @@
   ansible.builtin.apt:
     deb: /tmp/grafana.deb
 
+- name: Configure grafana
+  ansible.builtin.template:
+    src: grafana.ini.j2
+    dest: /etc/grafana/grafana.ini
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - event_restart_grafana
+
+- name: Copy datasource tempate
+  ansible.builtin.template:
+    src: prometheus-source.yaml.j2
+    dest: /etc/grafana/provisioning/datasources/prometheus.yaml
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Create dashboards directory
+  ansible.builtin.file:
+    path: /var/lib/grafana/dashboards
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Copy grafana dashboards
+  ansible.builtin.copy:
+    src: "Infra-monitoring.json"
+    dest: /var/lib/grafana/dashboards
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Copy grafana dashboards provisioning
+  ansible.builtin.copy:
+    src: "infra-dashboard-provisioner.yaml"
+    dest: /etc/grafana/provisioning/dashboards
+    owner: root
+    group: root
+    mode: "0644"
+
 - name: "Start grafana server"
   ansible.builtin.service:
     name: grafana-server
     enabled: true
-    state: started
+    state: restarted
